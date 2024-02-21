@@ -28,6 +28,25 @@ public class ScraperController : ControllerBase
 
         return Ok(titles);
     }
+    
+    [HttpGet("image-scraper")]
+    public Task<IActionResult> ScrapeImages()
+    {
+        HtmlWeb htmlWeb = new HtmlWeb();
+        HtmlDocument htmlDocument = htmlWeb.Load("https://dev.to/alrobilliard/deploying-net-core-to-heroku-1lfe");
+        
+        //setting the target 
+        var images = htmlDocument.DocumentNode.CssSelect("img");
+
+        //storing
+        var imageUrls = new List<string>();
+        foreach(var item in images)
+        {
+            imageUrls.Add(item.Attributes["src"].Value);
+        }
+
+        return Task.FromResult<IActionResult>(Ok(imageUrls));
+    } 
 }
 
 public class Row {
